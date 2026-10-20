@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Penguin VR Build Progress</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=Newsreader:opsz,wght@6..72,400&display=swap">
+<style>
+:root {
+  --font-anthropic-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-anthropic-serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --color-bg: #f6f8f9; --color-panel: #ffffff; --color-fg: #16202a; --color-fg-muted: #5b6874;
+  --color-border-line: #dde3e8; --color-ok: #2f7d4f; --color-warn: #a0650c; --color-bad: #b4372f;
+  --accent: #2b6cb0;
+  --cds-chart-grid: #e7ecf0; --cds-chart-muted: #9aa6b1; --cds-chart-reference: #6b7783; --cds-chart-status-critical: #c2412f;
+  --cds-surface-popover: #ffffff; --cds-border: #d3dae0; --cds-text-secondary: #5b6874; --cds-shadow-popover: 0 6px 20px rgba(16,32,48,.12);
+  --cds-font-size-caption: .8125rem; --cds-font-size-body: .9375rem; --cds-font-size-heading: 1.0625rem; --cds-font-size-title: 2rem; --cds-font-weight-medium: 600;
+  --cds-gap-xs: .25rem; --cds-gap-sm: .5rem; --cds-gap-md: .875rem; --cds-gap-lg: 1.5rem;
+  --cds-pad-xs: .3rem; --cds-pad-sm: .6rem; --cds-pad-lg: 1.1rem; --cds-radius: 10px; --cds-dur-slow: .4s;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --color-bg: #0f151b; --color-panel: #161e26; --color-fg: #e4eaef; --color-fg-muted: #93a1ad;
+  --color-border-line: #26323d; --color-ok: #6cc28f; --color-warn: #e0a54a; --color-bad: #ef7a6e; --accent: #6ea8e8;
+  --cds-chart-grid: #222c36; --cds-chart-muted: #5d6a76; --cds-chart-reference: #8c99a5; --cds-chart-status-critical: #ef7a6e;
+  --cds-surface-popover: #1c2630; --cds-border: #2e3b47; --cds-text-secondary: #93a1ad; --cds-shadow-popover: 0 6px 20px rgba(0,0,0,.45);
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --color-bg: #0f151b; --color-panel: #161e26; --color-fg: #e4eaef; --color-fg-muted: #93a1ad;
+  --color-border-line: #26323d; --color-ok: #6cc28f; --color-warn: #e0a54a; --color-bad: #ef7a6e; --accent: #6ea8e8;
+  --cds-chart-grid: #222c36; --cds-chart-muted: #5d6a76; --cds-chart-reference: #8c99a5; --cds-chart-status-critical: #ef7a6e;
+  --cds-surface-popover: #1c2630; --cds-border: #2e3b47; --cds-text-secondary: #93a1ad; --cds-shadow-popover: 0 6px 20px rgba(0,0,0,.45);
+  color-scheme: dark; }
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--color-bg); color: var(--color-fg); font-family: var(--font-anthropic-sans); font-size: var(--cds-font-size-body); line-height: 1.5;
+  padding-block: 2rem 3rem; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.dash-skeleton:empty, .dash-skeleton { position: relative; }
+.dash-skeleton:empty::after { content: ""; position: absolute; inset: 0; border-radius: var(--cds-radius); background: var(--cds-chart-grid); }
+span.dash-skeleton { color: transparent; background: var(--cds-chart-grid); border-radius: 6px; }
+.pv-updated { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); margin: 0; }
+.pv-foot { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); text-align: center; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.pv { display: grid; gap: var(--cds-gap-lg); font-family: var(--font-anthropic-sans); max-width: 72rem; margin-inline: auto; }
+.pv-head { display: grid; gap: var(--cds-gap-xs); }
+.pv-title { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0; text-wrap: balance; }
+.pv-take { color: var(--color-fg-muted); margin: 0; font-size: var(--cds-font-size-body); }
+.pv-tiles { display: grid; gap: var(--cds-gap-md); grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); }
+.pv-tile, .pv-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); min-width: 0; }
+.pv-tile { display: grid; gap: var(--cds-gap-xs); align-content: start; }
+.pv-label { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.pv-big { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; line-height: 1.1; }
+.pv-sub { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+.pv-card h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; }
+.pv-note { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); margin: var(--cds-gap-xs) 0 var(--cds-gap-md); }
+.pv-grid2 { display: grid; gap: var(--cds-gap-md); grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); }
+.pv-gantt { position: relative; min-height: 28rem; }
+.pv-gantt.pv-drawn { min-height: 0; }
+.pv-gantt svg text { font-size: var(--cds-font-size-caption); }
+.pv-tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); max-width: 16rem; }
+.pv-tip .pv-tip-k { color: var(--cds-text-secondary); }
+.pv-legend { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin-top: var(--cds-gap-sm); }
+.pv-legend span { display: inline-flex; align-items: center; gap: var(--cds-gap-xs); }
+.pv-sw { width: 0.75rem; height: 0.75rem; border-radius: 3px; display: inline-block; }
+.pv-owner { display: grid; gap: var(--cds-gap-md); min-height: 10rem; }
+.pv-orow { display: grid; grid-template-columns: 7.5rem 1fr 4.5rem; gap: var(--cds-gap-sm); align-items: center; font-size: var(--cds-font-size-body); }
+.pv-track { height: 0.625rem; background: var(--cds-chart-grid); border-radius: 999px; overflow: hidden; }
+.pv-fill { height: 100%; border-radius: 999px; }
+.pv-orow.pv-due { grid-template-columns: 3.5rem minmax(0, 1fr) auto; }
+.pv-onum { text-align: right; font-variant-numeric: tabular-nums; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.pv-tablewrap { overflow-x: auto; }
+.pv-table { width: 100%; border-collapse: collapse; font-size: var(--cds-font-size-body); }
+.pv-table th { text-align: left; font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+.pv-table td { padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); vertical-align: middle; font-variant-numeric: tabular-nums; }
+.pv-table tr:last-child td { border-bottom: 0; }
+.pv-pill { display: inline-block; padding: 0 var(--cds-pad-sm); border-radius: 999px; font-size: var(--cds-font-size-caption); border: 1px solid currentColor; white-space: nowrap; }
+.pv-s-done { color: var(--color-ok); }
+.pv-s-blocked { color: var(--color-bad); }
+.pv-s-in_progress { color: var(--color-warn); }
+.pv-s-not_started { color: var(--color-fg-muted); }
+.pv-mini { display: inline-block; width: 4rem; height: 0.4rem; background: var(--cds-chart-grid); border-radius: 999px; overflow: hidden; vertical-align: middle; margin-right: var(--cds-gap-xs); }
+.pv-mini i { display: block; height: 100%; border-radius: 999px; }
+.pv-hide-narrow { }
+@media (max-width: 40rem) { .pv-hide-narrow { display: none; } }
+.pv-checks { display: grid; gap: var(--cds-gap-md); grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); min-height: 6rem; }
+.pv-cgroup h3 { font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); margin: 0 0 var(--cds-gap-xs); }
+.pv-cgroup ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.pv-cgroup li { display: grid; grid-template-columns: 1.1rem 1fr; gap: var(--cds-gap-xs); font-size: var(--cds-font-size-caption); }
+.pv-cgroup li.pv-done span:last-child { color: var(--color-fg-muted); text-decoration: line-through; }
+.pv-tick { color: var(--color-ok); }
+.pv-open { color: var(--color-fg-muted); }
+.pv-fail { display: flex; align-items: center; justify-content: center; gap: var(--cds-gap-xs); color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); min-height: inherit; }
+.pv-fail::before { content: ""; width: .375rem; height: .375rem; border-radius: 50%; background: var(--color-bad); }
+</style>
+</head>
+<body>
+<div class="pv">
+  <header class="pv-head" id="overview">
+    <h1 class="pv-title">Penguin VR build progress</h1>
+    <p class="pv-updated" id="updated"></p>
+    <p class="pv-take" id="takeaway"><span class="dash-skeleton">Loading progress</span></p>
+  </header>
+
+  <section class="pv-tiles" aria-label="Headline figures">
+    <div class="pv-tile" id="tile-overall">
+      <span class="pv-label">Overall progress</span>
+      <span class="pv-big dash-skeleton" data-source="summary" data-field="pct">—</span>
+      <span class="pv-sub">share of all "Done when" checks ticked</span>
+    </div>
+    <div class="pv-tile" id="tile-checks">
+      <span class="pv-label">Checks done</span>
+      <span class="pv-big dash-skeleton" data-source="summary" data-field="checks_done">—</span>
+      <span class="pv-sub">of <span data-source="summary" data-field="checks_total">—</span> checks</span>
+    </div>
+    <div class="pv-tile" id="tile-tasks">
+      <span class="pv-label">Tasks done</span>
+      <span class="pv-big dash-skeleton" data-source="summary" data-field="tasks_done">—</span>
+      <span class="pv-sub">of <span data-source="summary" data-field="tasks_total">—</span> tasks · <span data-source="summary" data-field="in_progress">—</span> in progress</span>
+    </div>
+    <div class="pv-tile" id="tile-blocked">
+      <span class="pv-label">Blocked</span>
+      <span class="pv-big dash-skeleton" data-source="summary" data-field="blocked">—</span>
+      <span class="pv-sub">tasks waiting on something</span>
+    </div>
+  </section>
+
+  <section class="pv-card" id="timeline">
+    <h2>Timeline</h2>
+    <p class="pv-note">Each bar runs from a task's start to its due date; the filled part is the share of its checks ticked. The dashed line is the Nov 9 build freeze, the shaded band is human testing (Nov 9–20).</p>
+    <div class="pv-gantt dash-skeleton" id="gantt" data-source="tasks task_progress"></div>
+    <div class="pv-legend" id="legend"></div>
+  </section>
+
+  <div class="pv-grid2">
+    <section class="pv-card" id="by-owner">
+      <h2>By owner</h2>
+      <p class="pv-note">Checks ticked on each person's tasks.</p>
+      <div class="pv-owner dash-skeleton" id="owners" data-source="by_owner"></div>
+    </section>
+    <section class="pv-card" id="next-due">
+      <h2>Due next</h2>
+      <p class="pv-note">Open tasks with the nearest due dates.</p>
+      <div class="pv-owner dash-skeleton" id="due" data-source="next_due"></div>
+    </section>
+  </div>
+
+  <section class="pv-card" id="tasks">
+    <h2>Tasks</h2>
+    <p class="pv-note">N = Nikhil, O = Olly, B = Bonbon. P1 tasks can slip.</p>
+    <div class="pv-tablewrap">
+      <table class="pv-table" data-source="tasks" data-row-key="id">
+        <thead><tr>
+          <th data-field="id">Task</th>
+          <th data-field="title">Name</th>
+          <th data-field="owner">Owner</th>
+          <th data-field="end" class="pv-hide-narrow">Due</th>
+          <th data-field="status">Status</th>
+          <th data-source="task_progress" data-field="pct">Checks</th>
+        </tr></thead>
+        <tbody id="task-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="pv-card" id="checklist">
+    <h2>Done-when checklist</h2>
+    <p class="pv-note">Every check from the task spec, grouped by task.</p>
+    <div class="pv-checks dash-skeleton" id="checks" data-source="checks tasks"></div>
+  </section>
+  <p class="pv-foot">Progress data lives in <code>data/tasks.json</code> and <code>data/checks.json</code>.</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script>
+window.dash = (() => {
+  const store = {}; const calcs = []; const subs = [];
+  const colors = ['var(--accent)'];
+  const api = {
+    colors,
+    data: (id) => store[id] || { status: 'loading', data: [] },
+    calc: (id, def) => calcs.push({ id, ...def }),
+    onData: (fn) => { subs.push(fn); fn(); },
+    _set: (id, v) => { store[id] = v; },
+    _run: () => {
+      calcs.forEach((c) => {
+        const ins = c.inputs.map((i) => api.data(i));
+        if (ins.some((d) => d.status === 'error')) { store[c.id] = { status: 'error', data: [] }; return; }
+        if (ins.some((d) => d.status !== 'ok')) { store[c.id] = { status: 'loading', data: [] }; return; }
+        try { store[c.id] = { status: 'ok', data: c.fn(...ins.map((d) => d.data)) }; }
+        catch (e) { console.error(e); store[c.id] = { status: 'error', data: [] }; }
+      });
+      subs.forEach((fn) => fn());
+    },
+  };
+  return api;
+})();
+</script>
+<script>
+dash.calc('task_progress', {
+  title: 'Checks ticked per task',
+  description: 'For each task, how many of its checks are ticked and the share ticked.',
+  inputs: ['tasks', 'checks'],
+  fn: (tasks, checks) => tasks.map((t) => {
+    const mine = checks.filter((c) => c.task === t.id);
+    const done = mine.filter((c) => c.done === true || c.done === 'true').length;
+    return { id: t.id, done, total: mine.length, pct: mine.length ? done / mine.length : 0 };
+  }),
+});
+
+dash.calc('summary', {
+  title: 'Overall progress',
+  description: 'Checks ticked across all tasks, and how many tasks are done, in progress or blocked.',
+  inputs: ['tasks', 'checks'],
+  fn: (tasks, checks) => {
+    const done = checks.filter((c) => c.done === true || c.done === 'true').length;
+    return [{
+      checks_done: done,
+      checks_total: checks.length,
+      pct: checks.length ? done / checks.length : 0,
+      tasks_done: tasks.filter((t) => t.status === 'done').length,
+      tasks_total: tasks.length,
+      in_progress: tasks.filter((t) => t.status === 'in_progress').length,
+      blocked: tasks.filter((t) => t.status === 'blocked').length,
+    }];
+  },
+});
+
+dash.calc('by_owner', {
+  title: 'Progress by owner',
+  description: 'Checks ticked on the tasks each owner holds.',
+  inputs: ['tasks', 'checks'],
+  fn: (tasks, checks) => {
+    const owners = ['N', 'O', 'N + O', 'B', 'All'];
+    return owners.map((o) => {
+      const ids = tasks.filter((t) => t.owner === o).map((t) => t.id);
+      const mine = checks.filter((c) => ids.includes(c.task));
+      const done = mine.filter((c) => c.done === true || c.done === 'true').length;
+      return { owner: o, tasks: ids.length, done, total: mine.length, pct: mine.length ? done / mine.length : 0 };
+    }).filter((r) => r.tasks > 0);
+  },
+});
+
+dash.calc('next_due', {
+  title: 'Open tasks by due date',
+  description: 'Tasks not yet done, ordered by due date, first five.',
+  inputs: ['tasks'],
+  fn: (tasks) => tasks.filter((t) => t.status !== 'done')
+    .slice().sort((a, b) => (a.end < b.end ? -1 : a.end > b.end ? 1 : a.order - b.order))
+    .slice(0, 5)
+    .map((t) => ({ id: t.id, title: t.title, owner: t.owner, end: t.end, status: t.status })),
+});
+</script>
+<script>
+(() => {
+  const STATUS = { not_started: 'Not started', in_progress: 'In progress', blocked: 'Blocked', done: 'Done' };
+  const OWNER = { N: 'Nikhil', O: 'Olly', B: 'Bonbon', 'N + O': 'Nikhil + Olly', All: 'Everyone' };
+  const pct = d3.format('.0%');
+  const day = d3.utcFormat('%b %-d');
+  const parse = (s) => new Date(String(s).slice(0, 10) + 'T00:00:00Z');
+  const statusColor = (s) => s === 'done' ? 'var(--color-ok)' : s === 'blocked' ? 'var(--cds-chart-status-critical)' : s === 'in_progress' ? dash.colors[0] : 'var(--cds-chart-muted)';
+  const FREEZE = parse('2026-11-09');
+  const TEST_END = parse('2026-11-20');
+
+  const fail = (el) => { el.classList.remove('dash-skeleton'); el.replaceChildren(); const d = document.createElement('div'); d.className = 'pv-fail'; d.textContent = 'Failed to load'; el.append(d); };
+  const bad = (...ids) => ids.some((id) => dash.data(id).status === 'error');
+  const ready = (...ids) => ids.every((id) => dash.data(id).status === 'ok');
+
+  // legend
+  const legend = document.getElementById('legend');
+  legend.replaceChildren(...Object.entries(STATUS).map(([k, v]) => {
+    const s = document.createElement('span'); const sw = document.createElement('i'); sw.className = 'pv-sw'; sw.style.background = statusColor(k); s.append(sw, document.createTextNode(v)); return s;
+  }));
+
+  const tiles = () => {
+    const s = dash.data('summary');
+    document.querySelectorAll('[data-source="summary"]').forEach((el) => {
+      if (s.status !== 'ok' || !s.data.length) { if (s.status === 'error') el.textContent = '—'; return; }
+      el.classList.remove('dash-skeleton');
+      const f = el.dataset.field; const v = s.data[0][f];
+      el.textContent = f === 'pct' ? pct(v) : String(v);
+    });
+    const take = document.getElementById('takeaway');
+    if (s.status === 'ok' && s.data.length && ready('next_due')) {
+      const r = s.data[0]; const nd = dash.data('next_due').data;
+      let t = `${r.checks_done} of ${r.checks_total} checks ticked (${pct(r.pct)}). `;
+      t += r.blocked ? `${r.blocked} task${r.blocked > 1 ? 's' : ''} blocked. ` : 'Nothing blocked. ';
+      if (nd.length) t += `Next due: ${nd[0].id} ${nd[0].title}, ${day(parse(nd[0].end))}.`;
+      take.textContent = t;
+    } else if (bad('tasks', 'checks')) { take.textContent = 'Progress data did not load.'; }
+  };
+
+  const gantt = () => {
+    const el = document.getElementById('gantt');
+    const tip = document.createElement('div'); tip.className = 'pv-tip'; tip.hidden = true;
+    if (bad('tasks', 'checks')) return fail(el);
+    if (!ready('tasks', 'task_progress')) { el.classList.add('dash-skeleton'); el.replaceChildren(); return; }
+    el.classList.remove('dash-skeleton'); el.classList.add('pv-drawn');
+    const tasks = dash.data('tasks').data.slice().sort((a, b) => a.order - b.order);
+    const prog = new Map(dash.data('task_progress').data.map((r) => [r.id, r]));
+    const W = Math.max(el.clientWidth, 300);
+    const narrow = W < 560;
+    const rowH = 26, top = 24, bottom = 8;
+    const H = top + rowH * tasks.length + bottom;
+    el.replaceChildren();
+    const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role', 'img').attr('aria-label', 'Task timeline');
+    const labelOf = (t) => narrow ? t.id : `${t.id} ${t.title}`;
+    const meas = svg.append('g');
+    let lw = 0;
+    tasks.forEach((t) => { const n = meas.append('text').attr('font-size', 12).text(labelOf(t)); lw = Math.max(lw, n.node().getComputedTextLength()); });
+    meas.remove();
+    const left = Math.min(lw + 14, W * 0.45);
+    const start = d3.min(tasks, (t) => parse(t.start));
+    const x = d3.scaleUtc([start, d3.utcDay.offset(TEST_END, 1)], [left, W - 8]);
+    const y = (i) => top + i * rowH;
+    // week grid
+    const weeks = d3.utcMonday.range(start, d3.utcDay.offset(TEST_END, 1));
+    const g = svg.append('g');
+    g.selectAll('line.wk').data(weeks).join('line').attr('x1', (d) => x(d)).attr('x2', (d) => x(d)).attr('y1', top - 4).attr('y2', H - bottom).attr('stroke', 'var(--cds-chart-grid)').attr('stroke-width', 1);
+    g.selectAll('text.wk').data(weeks).join('text').attr('x', (d) => x(d) + 3).attr('y', 12).attr('fill', 'var(--color-fg-muted)').text((d) => day(d));
+    // human testing band and freeze
+    svg.append('rect').attr('x', x(FREEZE)).attr('width', x(d3.utcDay.offset(TEST_END, 1)) - x(FREEZE)).attr('y', top - 4).attr('height', H - top - bottom + 4).attr('fill', 'var(--cds-chart-grid)').attr('opacity', 0.6);
+    svg.append('line').attr('x1', x(FREEZE)).attr('x2', x(FREEZE)).attr('y1', top - 4).attr('y2', H - bottom).attr('stroke', 'var(--cds-chart-reference)').attr('stroke-dasharray', '4 3');
+    // today
+    const now = new Date(); const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    if (today >= start && today <= TEST_END) {
+      svg.append('line').attr('x1', x(today)).attr('x2', x(today)).attr('y1', top - 4).attr('y2', H - bottom).attr('stroke', 'var(--color-fg)').attr('stroke-width', 1.5);
+      svg.append('text').attr('x', x(today) + 3).attr('y', top - 6).attr('fill', 'var(--color-fg)').attr('font-weight', 600).text('Today');
+    }
+    const rows = svg.append('g').selectAll('g').data(tasks).join('g').attr('transform', (d, i) => `translate(0,${y(i)})`);
+    rows.append('text').attr('x', 0).attr('y', rowH / 2 + 4).attr('fill', (d) => d.priority === 'P1' ? 'var(--color-fg-muted)' : 'var(--color-fg)').text(labelOf);
+    const bx = (d) => x(parse(d.start));
+    const bw = (d) => Math.max(x(d3.utcDay.offset(parse(d.end), 1)) - x(parse(d.start)), 6);
+    rows.append('rect').attr('x', bx).attr('y', 5).attr('height', rowH - 10).attr('width', bw).attr('rx', 4)
+      .attr('fill', (d) => statusColor(d.status)).attr('fill-opacity', 0.18).attr('stroke', (d) => statusColor(d.status)).attr('stroke-width', 1)
+      .attr('stroke-dasharray', (d) => d.priority === 'P1' ? '3 3' : null);
+    rows.append('rect').attr('x', bx).attr('y', 5).attr('height', rowH - 10).attr('rx', 4)
+      .attr('width', (d) => { const p = prog.get(d.id); return p && p.pct > 0 ? Math.max(bw(d) * p.pct, 4) : 0; })
+      .attr('fill', (d) => statusColor(d.status === 'not_started' ? 'in_progress' : d.status));
+    rows.append('rect').attr('x', 0).attr('y', 0).attr('width', W).attr('height', rowH).attr('fill', 'transparent')
+      .on('mousemove', (event, d) => {
+        const p = prog.get(d.id) || { done: 0, total: 0, pct: 0 };
+        tip.replaceChildren();
+        const k = document.createElement('div'); k.className = 'pv-tip-k'; k.textContent = `${day(parse(d.start))} – ${day(parse(d.end))} · ${OWNER[d.owner] || d.owner}`;
+        const n = document.createElement('div'); n.textContent = `${d.id} ${d.title}`;
+        const s = document.createElement('div'); s.textContent = `${STATUS[d.status] || d.status} · ${p.done} of ${p.total} checks`;
+        tip.append(k, n, s);
+        if (d.note) { const no = document.createElement('div'); no.className = 'pv-tip-k'; no.textContent = d.note; tip.append(no); }
+        tip.hidden = false;
+        const [mx, my] = d3.pointer(event, el);
+        const tw = tip.offsetWidth;
+        tip.style.left = Math.min(Math.max(mx + 12, 0), el.clientWidth - tw) + 'px';
+        tip.style.top = (my + 14) + 'px';
+      })
+      .on('mouseleave', () => { tip.hidden = true; });
+    el.append(tip);
+  };
+
+  const bars = (elId, src, rowsOf) => {
+    const el = document.getElementById(elId);
+    const d = dash.data(src);
+    if (d.status === 'error' || bad('tasks', 'checks')) return fail(el);
+    if (d.status !== 'ok') { el.classList.add('dash-skeleton'); el.replaceChildren(); return; }
+    el.classList.remove('dash-skeleton');
+    el.replaceChildren(...rowsOf(d.data));
+  };
+
+  const owners = () => bars('owners', 'by_owner', (data) => data.map((r) => {
+    const row = document.createElement('div'); row.className = 'pv-orow';
+    const n = document.createElement('span'); n.textContent = OWNER[r.owner] || r.owner;
+    const tr = document.createElement('div'); tr.className = 'pv-track';
+    const f = document.createElement('div'); f.className = 'pv-fill'; f.style.width = (r.pct * 100) + '%'; f.style.background = dash.colors[0]; tr.append(f);
+    const v = document.createElement('span'); v.className = 'pv-onum'; v.textContent = `${r.done}/${r.total}`;
+    row.append(n, tr, v); return row;
+  }));
+
+  const due = () => bars('due', 'next_due', (data) => data.length ? data.map((r) => {
+    const row = document.createElement('div'); row.className = 'pv-orow pv-due';
+    const n = document.createElement('span'); n.textContent = day(parse(r.end));
+    const t = document.createElement('span'); t.textContent = `${r.id} ${r.title}`;
+    const s = document.createElement('span'); s.className = `pv-pill pv-s-${r.status}`; s.textContent = STATUS[r.status] || r.status;
+    row.append(n, t, s); return row;
+  }) : [Object.assign(document.createElement('p'), { className: 'pv-note', textContent: 'Every task is done.' })]);
+
+  const table = () => {
+    const body = document.getElementById('task-body');
+    if (!ready('tasks', 'task_progress')) { body.replaceChildren(); return; }
+    const prog = new Map(dash.data('task_progress').data.map((r) => [r.id, r]));
+    const tasks = dash.data('tasks').data.slice().sort((a, b) => a.order - b.order);
+    body.replaceChildren(...tasks.map((t) => {
+      const tr = document.createElement('tr');
+      const td = (txt, cls) => { const c = document.createElement('td'); if (cls) c.className = cls; c.textContent = txt; return c; };
+      const st = document.createElement('td'); const pill = document.createElement('span'); pill.className = `pv-pill pv-s-${t.status}`; pill.textContent = STATUS[t.status] || t.status; st.append(pill);
+      const p = prog.get(t.id) || { pct: 0 };
+      const pc = document.createElement('td'); const mini = document.createElement('span'); mini.className = 'pv-mini'; const i = document.createElement('i'); i.style.width = (p.pct * 100) + '%'; i.style.background = dash.colors[0]; mini.append(i); pc.append(mini, document.createTextNode(pct(p.pct)));
+      tr.append(td(t.id), td(t.priority === 'P1' ? `${t.title} (P1)` : t.title), td(t.owner), td(day(parse(t.end)), 'pv-hide-narrow'), st, pc);
+      return tr;
+    }));
+  };
+
+  const checklist = () => {
+    const el = document.getElementById('checks');
+    if (bad('checks', 'tasks')) return fail(el);
+    if (!ready('checks', 'tasks')) { el.classList.add('dash-skeleton'); el.replaceChildren(); return; }
+    el.classList.remove('dash-skeleton');
+    const tasks = dash.data('tasks').data.slice().sort((a, b) => a.order - b.order);
+    const checks = dash.data('checks').data;
+    el.replaceChildren(...tasks.map((t) => {
+      const box = document.createElement('div'); box.className = 'pv-cgroup';
+      const h = document.createElement('h3'); h.textContent = `${t.id} ${t.title}`;
+      const ul = document.createElement('ul');
+      checks.filter((c) => c.task === t.id).forEach((c) => {
+        const done = c.done === true || c.done === 'true';
+        const li = document.createElement('li'); if (done) li.className = 'pv-done';
+        const m = document.createElement('span'); m.className = done ? 'pv-tick' : 'pv-open'; m.textContent = done ? '✓' : '○';
+        const tx = document.createElement('span'); tx.textContent = c.item;
+        li.append(m, tx); ul.append(li);
+      });
+      box.append(h, ul); return box;
+    }));
+  };
+
+  dash.onData(() => { tiles(); gantt(); owners(); due(); table(); checklist(); });
+})();
+</script>
+<script>
+(async () => {
+  const get = async (id) => {
+    try { const r = await fetch(`data/${id}.json`, { cache: 'no-store' }); if (!r.ok) throw new Error(r.status); dash._set(id, { status: 'ok', data: await r.json() }); }
+    catch (e) { console.error(e); dash._set(id, { status: 'error', data: [] }); }
+  };
+  await Promise.all([get('tasks'), get('checks'), get('meta')]);
+  const m = dash.data('meta');
+  const u = document.getElementById('updated');
+  if (m.status === 'ok' && m.data.updated) u.textContent = `Updated ${m.data.updated}${m.data.by ? ' by ' + m.data.by : ''}`;
+  dash._run();
+  let t; window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(dash._run, 120); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,374 @@
+[
+ {
+  "check_id": "B1.1",
+  "task": "B1",
+  "item": "Covers every scene: what to cut, change or keep",
+  "done": false
+ },
+ {
+  "check_id": "B1.2",
+  "task": "B1",
+  "item": "Lists which Margo lines stay as instructions",
+  "done": false
+ },
+ {
+  "check_id": "B2.1",
+  "task": "B2",
+  "item": "Every line has its scene, trigger event, delay and text",
+  "done": false
+ },
+ {
+  "check_id": "B2.2",
+  "task": "B2",
+  "item": "Delivered as a cue sheet the build can load",
+  "done": false
+ },
+ {
+  "check_id": "B3.1",
+  "task": "B3",
+  "item": "One audio file per cue id",
+  "done": false
+ },
+ {
+  "check_id": "B3.2",
+  "task": "B3",
+  "item": "Swapped into both apps before the T14 pilots",
+  "done": false
+ },
+ {
+  "check_id": "T0.1",
+  "task": "T0",
+  "item": "Both APKs install and run on the Quest 3",
+  "done": false
+ },
+ {
+  "check_id": "T0.2",
+  "task": "T0",
+  "item": "Play-through times and problems posted",
+  "done": false
+ },
+ {
+  "check_id": "T0.3",
+  "task": "T0",
+  "item": "Decision made on a Waddle SDK upgrade",
+  "done": false
+ },
+ {
+  "check_id": "T0b.1",
+  "task": "T0b",
+  "item": "Both apps playable in the Editor without a headset",
+  "done": false
+ },
+ {
+  "check_id": "T0b.2",
+  "task": "T0b",
+  "item": "Waddle sway keys use the real step logic",
+  "done": false
+ },
+ {
+  "check_id": "T0b.3",
+  "task": "T0b",
+  "item": "Play mode reaches gameplay with no headset",
+  "done": false
+ },
+ {
+  "check_id": "T0b.4",
+  "task": "T0b",
+  "item": "pose.csv and events.jsonl written in the Editor",
+  "done": false
+ },
+ {
+  "check_id": "T1.1",
+  "task": "T1",
+  "item": "Buttons and thumbsticks never move the penguin",
+  "done": false
+ },
+ {
+  "check_id": "T1.2",
+  "task": "T1",
+  "item": "Waddling still moves the penguin",
+  "done": false
+ },
+ {
+  "check_id": "T1.3",
+  "task": "T1",
+  "item": "Pebble, dance and skua work with controllers",
+  "done": false
+ },
+ {
+  "check_id": "T1.4",
+  "task": "T1",
+  "item": "Button presses logged as BUTTON_PRESS",
+  "done": false
+ },
+ {
+  "check_id": "T2.1",
+  "task": "T2",
+  "item": "Same StudyLogging code in both repos",
+  "done": false
+ },
+ {
+  "check_id": "T2.2",
+  "task": "T2",
+  "item": "A 5-minute session writes all four files",
+  "done": false
+ },
+ {
+  "check_id": "T2.3",
+  "task": "T2",
+  "item": "pose.csv rows match frame rate × seconds (within 2%)",
+  "done": false
+ },
+ {
+  "check_id": "T2.4",
+  "task": "T2",
+  "item": "Data survives taking the headset off or a force quit",
+  "done": false
+ },
+ {
+  "check_id": "T2.5",
+  "task": "T2",
+  "item": "Remote logging off; app runs offline",
+  "done": false
+ },
+ {
+  "check_id": "T2.6",
+  "task": "T2",
+  "item": "Participant ID and git commit in meta.json",
+  "done": false
+ },
+ {
+  "check_id": "T3.1",
+  "task": "T3",
+  "item": "LSL tested on Quest (Oct 24 spike)",
+  "done": false
+ },
+ {
+  "check_id": "T3.2",
+  "task": "T3",
+  "item": "LabRecorder file has both streams, or fallback chosen",
+  "done": false
+ },
+ {
+  "check_id": "T3.3",
+  "task": "T3",
+  "item": "Sync flash and beep at session start and end",
+  "done": false
+ },
+ {
+  "check_id": "T3.4",
+  "task": "T3",
+  "item": "SYNC_START lines up with the flash within one frame",
+  "done": false
+ },
+ {
+  "check_id": "T4.1",
+  "task": "T4",
+  "item": "One session runs tutorial to end in the fixed order",
+  "done": false
+ },
+ {
+  "check_id": "T4.2",
+  "task": "T4",
+  "item": "Content with no Waddle counterpart removed, per B1",
+  "done": false
+ },
+ {
+  "check_id": "T4.3",
+  "task": "T4",
+  "item": "Every scene logs SCENE_START and SCENE_END",
+  "done": false
+ },
+ {
+  "check_id": "T5.1",
+  "task": "T5",
+  "item": "Raid plays the same way every run",
+  "done": false
+ },
+ {
+  "check_id": "T5.2",
+  "task": "T5",
+  "item": "Approaches match Waddle and at least one egg is lost",
+  "done": false
+ },
+ {
+  "check_id": "T5.3",
+  "task": "T5",
+  "item": "First-time player photographs and scans within the cap",
+  "done": false
+ },
+ {
+  "check_id": "T5.4",
+  "task": "T5",
+  "item": "All raid events logged",
+  "done": false
+ },
+ {
+  "check_id": "T6.1",
+  "task": "T6",
+  "item": "Trip count equals the pebbles a Waddle nest needs",
+  "done": false
+ },
+ {
+  "check_id": "T6.2",
+  "task": "T6",
+  "item": "Each trip can be photographed and the goal completes",
+  "done": false
+ },
+ {
+  "check_id": "T6.3",
+  "task": "T6",
+  "item": "Pebble follows the beak; no stuck or clipping penguins",
+  "done": false
+ },
+ {
+  "check_id": "T7.1",
+  "task": "T7",
+  "item": "Chick begs with animation and cheeps",
+  "done": false
+ },
+ {
+  "check_id": "T7.2",
+  "task": "T7",
+  "item": "A beak touch counts one feed, with a 2 s cooldown",
+  "done": false
+ },
+ {
+  "check_id": "T7.3",
+  "task": "T7",
+  "item": "Number of feeds matches Hatched's feeding scene",
+  "done": false
+ },
+ {
+  "check_id": "T7.4",
+  "task": "T7",
+  "item": "First-time player understands it without help",
+  "done": false
+ },
+ {
+  "check_id": "T7.5",
+  "task": "T7",
+  "item": "Every feed logged",
+  "done": false
+ },
+ {
+  "check_id": "T8.1",
+  "task": "T8",
+  "item": "narration.json drives both apps",
+  "done": false
+ },
+ {
+  "check_id": "T8.2",
+  "task": "T8",
+  "item": "A line changes on the headset without a rebuild",
+  "done": false
+ },
+ {
+  "check_id": "T8.3",
+  "task": "T8",
+  "item": "Placeholders and the Tools > Narration window work",
+  "done": false
+ },
+ {
+  "check_id": "T8.4",
+  "task": "T8",
+  "item": "Same lines in the same order, with subtitles, in both apps",
+  "done": false
+ },
+ {
+  "check_id": "T8.5",
+  "task": "T8",
+  "item": "Every line logs VO_START and VO_END",
+  "done": false
+ },
+ {
+  "check_id": "T9.1",
+  "task": "T9",
+  "item": "Panel appears after each of scenes 1–4",
+  "done": false
+ },
+ {
+  "check_id": "T9.2",
+  "task": "T9",
+  "item": "Same items, layout and input in both apps",
+  "done": false
+ },
+ {
+  "check_id": "T9.3",
+  "task": "T9",
+  "item": "Every answer saved with its timestamp",
+  "done": false
+ },
+ {
+  "check_id": "T9.4",
+  "task": "T9",
+  "item": "Final rating items in use",
+  "done": false
+ },
+ {
+  "check_id": "T10.1",
+  "task": "T10",
+  "item": "Same button and fact pool in both apps",
+  "done": false
+ },
+ {
+  "check_id": "T10.2",
+  "task": "T10",
+  "item": "EXPERT_REQUEST logged",
+  "done": false
+ },
+ {
+  "check_id": "T11.1",
+  "task": "T11",
+  "item": "Same study_config.json in both apps",
+  "done": false
+ },
+ {
+  "check_id": "T11.2",
+  "task": "T11",
+  "item": "Tutorial ends at criterion",
+  "done": false
+ },
+ {
+  "check_id": "T11.3",
+  "task": "T11",
+  "item": "Time caps move on and log SCENE_TIMEOUT",
+  "done": false
+ },
+ {
+  "check_id": "T11.4",
+  "task": "T11",
+  "item": "Fixed order, no other menus",
+  "done": false
+ },
+ {
+  "check_id": "T11.5",
+  "task": "T11",
+  "item": "Full session runs with no experimenter input",
+  "done": false
+ },
+ {
+  "check_id": "T14.1",
+  "task": "T14",
+  "item": "Three clean sessions per app",
+  "done": false
+ },
+ {
+  "check_id": "T14.2",
+  "task": "T14",
+  "item": "All sessions pass the validation script",
+  "done": false
+ },
+ {
+  "check_id": "T14.3",
+  "task": "T14",
+  "item": "Scene durations reported",
+  "done": false
+ },
+ {
+  "check_id": "T14.4",
+  "task": "T14",
+  "item": "study-v1.0 tagged; APKs and README in the shared drive",
+  "done": false
+ }
+]
